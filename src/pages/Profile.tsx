@@ -1,19 +1,9 @@
 import React, { useEffect } from "react";
 
 const Profile = () => {
- 
+  useEffect(() => {}, []);
 
-  
-
-  useEffect(() => {
-   
-  }, []);
-
-  return (
-    <>
-     Profile
-    </>
-  );
+  return <>Profile</>;
 };
 
 export default React.memo(Profile);

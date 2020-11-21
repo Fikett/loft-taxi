@@ -1,10 +1,5 @@
-declare module '@home-page' {
-    
-   
-    export type IProps = {
-        setCurentPage: Function
-    };
-  
-  
-  }
-  
+declare module "@home-page" {
+  export type IProps = {
+    setCurentPage: Function;
+  };
+}
