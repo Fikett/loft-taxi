@@ -11,7 +11,7 @@ const HomePage = () => {
 
   useEffect(() => {}, []);
 
-  console.log("currentPage", currentPage);
+  //console.log("currentPage", currentPage);
 
   return (
     <>
