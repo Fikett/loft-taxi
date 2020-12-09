@@ -3,3 +3,19 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
+
+import { configure } from 'enzyme';
+import Adapter from "enzyme-adapter-react-16";
+
+configure({adapter: new Adapter()});
+window.URL.createObjectURL = function() {return ""};
+
+jest.mock('mapbox-gl/dist/mapbox-gl', () => ({
+    GeolocateControl: jest.fn(),
+    Map: jest.fn(() => ({
+      addControl: jest.fn(),
+      on: jest.fn(),
+      remove: jest.fn(),
+    })),
+    NavigationControl: jest.fn(),
+  }));
