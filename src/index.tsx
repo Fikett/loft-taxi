@@ -5,14 +5,23 @@ import { MuiThemeProvider } from "@material-ui/core";
 import { theme } from "loft-taxi-mui-theme";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import HomePage from "./pages/HomePage";
+import HomePage from "./pages/HomePage/HomePage";
+
+import { BrowserRouter } from "react-router-dom";
+import { Provider } from 'react-redux';
+import createStore from "modules/store";
+
+const store = createStore();
 
 ReactDOM.render(
   // <React.StrictMode>
-
-  <MuiThemeProvider theme={theme}>
-    <HomePage />
-  </MuiThemeProvider>,
+  <BrowserRouter>
+    <MuiThemeProvider theme={theme}>
+      <Provider store={store}>
+        <HomePage />
+      </Provider>
+    </MuiThemeProvider>
+  </BrowserRouter>,
 
   // </React.StrictMode>,
   document.getElementById("root")

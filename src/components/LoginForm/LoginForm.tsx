@@ -8,10 +8,14 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import { LoginContext } from "pages/HomePage";
-import React, { useContext, useEffect } from "react";
+import { LoginContext } from "pages/HomePage/HomePage";
+import React, { useContext, useEffect, useState } from "react";
 import { PagesEnum } from "utils/common";
-
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAuthRequest, setLoginData } from "modules/auth/actions";
+import { IFetchAuthRequestPayload } from "@modules-auth";
+import { selectLoginData } from "modules/auth/selectors";
+import { useHistory } from "react-router-dom";
 
 const styles = () => ({
   header: {
@@ -38,13 +42,14 @@ const stylesBg = () => ({
 
 const useStyles = makeStyles(styles);
 
-const LoginForm: React.FC<IProps> = (props) => {
+const LoginForm: React.FC = () => {
   const classes = useStyles();
 
+  const history = useHistory();
 
-  const loginContext = useContext(LoginContext);
+  const loginData = useSelector(selectLoginData);
 
-  useEffect(() => {}, []);
+  const dispatch = useDispatch();
 
   return (
     <>
@@ -72,8 +77,8 @@ const LoginForm: React.FC<IProps> = (props) => {
                       event.preventDefault();
                       // event.stopPropagation();
                       // event.nativeEvent.stopImmediatePropagation();
-
-                      props.setCurentPage(PagesEnum.Register);
+                      history.push("/register");
+                      //props.setCurentPage(PagesEnum.Register);
                     }}
                     variant="contained"
                     color="primary"
@@ -90,6 +95,11 @@ const LoginForm: React.FC<IProps> = (props) => {
                   placeholder={"Имя пользователя"}
                   error={false}
                   helperText={""}
+                  value={loginData.login}
+                  onChange={(event) => {
+                    dispatch(setLoginData({ login: event.target.value }));
+                    //updateLogin(event.target.value)
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -99,18 +109,32 @@ const LoginForm: React.FC<IProps> = (props) => {
                   placeholder={"Пароль"}
                   error={false}
                   helperText={""}
+                  value={loginData.password}
+                  onChange={(event) => {
+                    dispatch(setLoginData({ password: event.target.value }));
+                    //updateLogin(event.target.value)
+                  }}
                 />
               </Grid>
               <Grid item xs={12}>
                 <Button
-                data-testid="loginBtn"
+                  data-testid="loginBtn"
                   onClick={(event) => {
                     event.preventDefault();
                     // event.stopPropagation();
                     // event.nativeEvent.stopImmediatePropagation();
 
-                    props.setCurentPage(PagesEnum.Map);
-                    loginContext.loginFunc("test", "testtest");
+                    //props.setCurentPage(PagesEnum.Map);
+                    //loginContext.loginFunc("test", "testtest");
+
+                    let req: IFetchAuthRequestPayload = {
+                      email: loginData.login,
+                      password: loginData.password,
+                    };
+
+                    //req = { email: "test@test.com", password: "123123" };
+
+                    dispatch(fetchAuthRequest(req));
                   }}
                   variant="contained"
                   color="primary"
@@ -123,7 +147,6 @@ const LoginForm: React.FC<IProps> = (props) => {
           </form>
         </Card>
       </Paper>
-    
     </>
   );
 };
