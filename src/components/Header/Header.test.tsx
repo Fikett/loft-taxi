@@ -1,21 +1,30 @@
-
 import React from "react";
-
-import { fireEvent, render } from "@testing-library/react";
+import { render, fireEvent } from "@testing-library/react";
+import { createMemoryHistory } from "history";
+import { Link, MemoryRouter, Router } from "react-router-dom";
+import { Provider } from "react-redux";
+import configureStore from "redux-mock-store";
 import Header from "./Header";
-import { shallow } from "enzyme";
 
-describe("Header", () =>
-{
+describe("Header", () => {
   // beforeEach(() => { });
 
   // beforeEach(() => { });
 
-  test("Login btn exists", () =>
-  {
+  test("Login btn exists", () => {
     //const wrapper = shallow(<Header setCurentPage={() => { console.log()}}/>);
-    const mock = (<Header setCurentPage={() => { }} />);
-    const { getByTestId, getByText } = render(mock);
+
+    const mockStore = configureStore();
+    const store: any = mockStore({
+      auth: { authenticated: true },
+    });
+
+    const { getByTestId, getByText } = render(
+      <Provider store={store}>
+        <Header />
+      </Provider>,
+      { wrapper: MemoryRouter }
+    );
 
     fireEvent.click(getByTestId("headerLoginBtn"));
 
