@@ -75,10 +75,8 @@ const LoginForm: React.FC = () => {
                   <Button
                     onClick={(event) => {
                       event.preventDefault();
-                      // event.stopPropagation();
-                      // event.nativeEvent.stopImmediatePropagation();
+
                       history.push("/register");
-                      //props.setCurentPage(PagesEnum.Register);
                     }}
                     variant="contained"
                     color="primary"
@@ -98,7 +96,6 @@ const LoginForm: React.FC = () => {
                   value={loginData.login}
                   onChange={(event) => {
                     dispatch(setLoginData({ login: event.target.value }));
-                    //updateLogin(event.target.value)
                   }}
                 />
               </Grid>
@@ -112,7 +109,6 @@ const LoginForm: React.FC = () => {
                   value={loginData.password}
                   onChange={(event) => {
                     dispatch(setLoginData({ password: event.target.value }));
-                    //updateLogin(event.target.value)
                   }}
                 />
               </Grid>
@@ -121,11 +117,6 @@ const LoginForm: React.FC = () => {
                   data-testid="loginBtn"
                   onClick={(event) => {
                     event.preventDefault();
-                    // event.stopPropagation();
-                    // event.nativeEvent.stopImmediatePropagation();
-
-                    //props.setCurentPage(PagesEnum.Map);
-                    //loginContext.loginFunc("test", "testtest");
 
                     let req: IFetchAuthRequestPayload = {
                       email: loginData.login,

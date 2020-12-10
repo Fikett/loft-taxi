@@ -4,11 +4,16 @@ import Button from "@material-ui/core/Button";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import { MCIcon } from "loft-taxi-mui-theme";
 import { LoginContext } from "pages/HomePage/HomePage";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { Box, Paper, TextField } from "@material-ui/core";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns/build/date-fns-utils";
+import DateFnsUtils from "@date-io/date-fns";
+import { selectPaymentData, selecttoken } from "modules/auth/selectors";
+import { saveCardRequest, setPaymentData } from "modules/auth";
+import moment from "moment";
+import { ParsableDate } from "@material-ui/pickers/constants/prop-types";
+import { ISavePaymentData } from "@modules-auth";
 
 const styles = (theme) => ({
   root: {
@@ -39,7 +44,19 @@ const PaymentForm: React.FC = () => {
 
   const loginContext = useContext(LoginContext);
 
+  const token = useSelector(selecttoken);
+
+  const paymentData = useSelector(selectPaymentData);
+
   const [selectedDate, handleDateChange] = React.useState(new Date());
+
+  // useEffect(() => {
+  //   handleDateChange(paymentData.date);
+  // }, [paymentData.date]);
+
+  // useEffect(() => {
+  //   dispatch(setPaymentData({ date: selectedDate }));
+  // }, [selectedDate]);
 
   return (
     <>
@@ -62,24 +79,47 @@ const PaymentForm: React.FC = () => {
                   >
                     <MCIcon />
                     <TextField
+                     data-testid="cardNumber"
                       name="cardNumber"
                       label="Номер карты"
                       placeholder="0000 0000 0000 0000"
                       error={false}
                       helperText=""
+                      value={paymentData.cardNumber}
+                      onChange={(event) => {
+                        dispatch(
+                          setPaymentData({ cardNumber: event.target.value })
+                        );
+                      }}
                     />
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <DatePicker
                         clearable
                         required
-                        // inputProps={{ "data-testid": "date" }}
+                        inputProps={{ "data-testid": "date" }}
                         views={["year", "month"]}
                         format="MM/yy"
                         value={selectedDate}
                         onChange={handleDateChange}
+                      />
+
+                      {/* <DatePicker
+                        //clearable
+                        //required
+                         inputProps={{ "data-testid": "date" }}
+                        //views={["year", "month"]}
+                        //format="MM/yy"
+                        value={paymentData.date as ParsableDate }
+                        onChange={(event) => {
+
+                         let a = moment(event).toDate();
+
+                          dispatch(setPaymentData({ date: a }));
+                        }}
+
                         //   {...input}
                         //   {...custom}
-                      />
+                      /> */}
                     </MuiPickersUtilsProvider>
                     {/* <RenderDatePicker
                     clearable
@@ -105,6 +145,12 @@ const PaymentForm: React.FC = () => {
                       placeholder="USER NAME"
                       error={false}
                       helperText=""
+                      value={paymentData.cardName}
+                      onChange={(event) => {
+                        dispatch(
+                          setPaymentData({ cardName: event.target.value })
+                        );
+                      }}
                     />
 
                     {/* <RenderField
@@ -124,6 +170,10 @@ const PaymentForm: React.FC = () => {
                       label="CVC"
                       error={false}
                       helperText=""
+                      value={paymentData.cvc}
+                      onChange={(event) => {
+                        dispatch(setPaymentData({ cvc: event.target.value }));
+                      }}
                     />
 
                     {/* <RenderField
@@ -146,6 +196,21 @@ const PaymentForm: React.FC = () => {
                 elevation={0}
                 type="submit"
                 className={classes.button}
+                onClick={(event) => {
+                  event.preventDefault();
+                  //event.stopPropagation();
+                  //event.nativeEvent.stopImmediatePropagation();
+
+                  let a: ISavePaymentData = {
+                    cardName: paymentData.cardName,
+                    cardNumber: paymentData.cardNumber,
+                    cvc: paymentData.cvc,
+                    expiryDate: paymentData.date,
+                    token: token,
+                  };
+
+                  dispatch(saveCardRequest(a));
+                }}
               >
                 Сохранить
               </Button>

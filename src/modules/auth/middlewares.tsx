@@ -6,6 +6,10 @@ import {
   fetchAuthFailure,
   fetchAuthRequest,
   fetchAuthSuccess,
+  saveCardFailure,
+  saveCardRequest,
+  saveCardSuccess,
+  saveToken,
 } from "./actions";
 
 async function postData(url = "", data = {}) {
@@ -33,8 +37,26 @@ export const authMiddleware = (store) => (next) => (action) => {
       .then((result: IfetchAuthSuccessPayload) => {
         if (result.success) {
           store.dispatch(fetchAuthSuccess(true));
+          store.dispatch(saveToken(result.token));
         } else {
           store.dispatch(fetchAuthFailure(false));
+          store.dispatch(saveToken(""));
+        }
+
+        
+      })
+      .catch((error: IfetchAuthFailurePayload) => {
+        console.error(error);
+      });
+  }
+  if (action.type === saveCardRequest.toString()) {
+    postData("https://loft-taxi.glitch.me/card ", action.payload)
+      //.then((response) => response.json())
+      .then((result: IfetchAuthSuccessPayload) => {
+        if (result.success) {
+          store.dispatch(saveCardSuccess(true));
+        } else {
+          store.dispatch(saveCardFailure(false));
         }
 
         

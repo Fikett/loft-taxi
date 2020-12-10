@@ -61,11 +61,8 @@ const RegistrationForm: React.FC = () => {
                 <Button
                   onClick={(event) => {
                     event.preventDefault();
-                    // event.stopPropagation();
-                    // event.nativeEvent.stopImmediatePropagation();
 
                     history.push("/login");
-                    //props.setCurentPage(PagesEnum.Login);
                   }}
                   variant="contained"
                   color="primary"
@@ -127,12 +124,8 @@ const RegistrationForm: React.FC = () => {
               <Button
                 onClick={(event) => {
                   event.preventDefault();
-                  // event.stopPropagation();
-                  // event.nativeEvent.stopImmediatePropagation();
 
-                  //loginContext.loginFunc("test", "testtest");
                   history.push("/map");
-                  //props.setCurentPage(PagesEnum.Map);
                 }}
                 variant="contained"
                 color="primary"

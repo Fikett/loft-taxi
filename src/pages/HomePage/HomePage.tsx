@@ -19,8 +19,6 @@ export type LoginContext = {
 };
 
 const HomePage = () => {
-  //const [currentPage, setCurrentPage] = useState<number>(PagesEnum.Login);
-
   const history = useHistory();
 
   const isLoggedIn = useSelector(selectAuthenticated);
@@ -53,18 +51,6 @@ const HomePage = () => {
           </Route>
         </Switch>
       </LoginContext.Provider>
-
-      {/* <LoginContext.Provider value={{ status: isLoggedIn }}>
-        <Header setCurentPage={setCurrentPage} />
-        {currentPage === PagesEnum.Map && <Map />}
-        {currentPage === PagesEnum.Profile && <Profile />}
-        {currentPage === PagesEnum.Login && (
-          <Login setCurentPage={setCurrentPage} />
-        )}
-        {currentPage === PagesEnum.Register && (
-          <Registration setCurentPage={setCurrentPage} />
-        )}
-      </LoginContext.Provider> */}
     </>
   );
 };
