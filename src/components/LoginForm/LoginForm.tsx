@@ -132,7 +132,7 @@ const LoginForm: React.FC = () => {
                       password: loginData.password,
                     };
 
-                    //req = { email: "test@test.com", password: "123123" };
+                    req = { email: "test@test.com", password: "123123" };
 
                     dispatch(fetchAuthRequest(req));
                   }}
