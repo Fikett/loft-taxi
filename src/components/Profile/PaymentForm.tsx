@@ -79,7 +79,7 @@ const PaymentForm: React.FC = () => {
                   >
                     <MCIcon />
                     <TextField
-                     data-testid="cardNumber"
+                      data-testid="cardNumber"
                       name="cardNumber"
                       label="Номер карты"
                       placeholder="0000 0000 0000 0000"

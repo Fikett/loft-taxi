@@ -41,13 +41,9 @@ const useStyles = makeStyles(styles);
 const Login: React.FC = () => {
   const classes = useStyles();
 
-  //const loginContext = useContext(LoginContext);
-
-  useEffect(() => {}, []);
-
   return (
     <>
-      <LoginForm  />
+      <LoginForm />
     </>
   );
 };

@@ -8,10 +8,7 @@ import {
 } from "@modules-auth";
 import { createAction } from "redux-actions";
 
-
-export const saveToken = createAction<string>(
-  "saveToken"
-);
+export const saveToken = createAction<string>("saveToken");
 
 export const fetchAuthRequest = createAction<IFetchAuthRequestPayload>(
   "fetchAuthRequest"
@@ -25,7 +22,6 @@ export const fetchAuthFailure = createAction<IfetchAuthFailurePayload>(
 
 export const setLoginData = createAction<ILoginData>("setLoginData");
 export const setPaymentData = createAction<IPaymentData>("setPaymentData");
-
 
 export const saveCardRequest = createAction<ISavePaymentData>(
   "saveCardRequest"

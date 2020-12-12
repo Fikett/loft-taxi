@@ -1,12 +1,25 @@
-import React, { createRef, useEffect } from "react";
+import React, { createRef, useEffect, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "./MapContainer.css";
+import RouteForm from "components/RouteForm/RouteForm";
+import { useSelector } from "react-redux";
+import { selectPaymentData } from "modules/auth/selectors";
+import FillPaymentInfoPreview from "./FillPaymentInfoPreview";
+import _ from "lodash";
+import { selectcurrentRoute } from "modules/routes/selectors";
 const MapContainer = () => {
+  const paymentData = useSelector(selectPaymentData);
+
+  const currentRoute = useSelector(selectcurrentRoute);
+
   let mapRef = createRef();
+
+  const [map, setmap] = useState(null);
 
   useEffect(() => {
     let a = (mapboxgl.accessToken =
       "pk.eyJ1Ijoic2F0YW5zZGVlciIsImEiOiJja2hrcmp6ZWEwOWZxMnNsbjc1NXlrcTd5In0.w964wIfUKgnYjQLp0Ods7Q");
+
     const map = new mapboxgl.Map({
       container: mapRef.current,
       style: "mapbox://styles/mapbox/light-v10",
@@ -14,13 +27,59 @@ const MapContainer = () => {
       zoom: 15,
     });
 
+    console.log("map", map);
+    setmap(map);
+
     return () => map.remove();
   }, []);
 
+  useEffect(() => {
+    if (map && currentRoute.length > 0) {
+      drawRoute(map, currentRoute);
+    }
+  }, [currentRoute]);
+
+  const drawRoute = (map, coordinates) => {
+    let layer = map.getLayer("route");
+
+    if (layer) {
+      map.removeLayer("route");
+    }
+
+    map.flyTo({
+      center: coordinates[0],
+      zoom: 15,
+    });
+    map.addLayer({
+      id: "route",
+      type: "line",
+      source: {
+        type: "geojson",
+        data: {
+          type: "Feature",
+          properties: {},
+          geometry: {
+            type: "LineString",
+            coordinates,
+          },
+        },
+      },
+      layout: {
+        "line-join": "round",
+        "line-cap": "round",
+      },
+      paint: {
+        "line-color": "#ffc617",
+        "line-width": 8,
+      },
+    });
+  };
+
   return (
     <>
-      Map
-      <div className="map-container" ref={mapRef} />
+      <div className="map-container" ref={mapRef}>
+        {_.isEmpty(paymentData) ? <FillPaymentInfoPreview /> : <RouteForm />}
+      </div>
     </>
   );
 };

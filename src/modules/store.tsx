@@ -1,18 +1,24 @@
 import { createStore, compose, applyMiddleware } from "redux";
-import { authMiddleware } from "../modules/auth";
-import rootReducer from "../modules";
+import rootReducer, { rootSaga } from "../modules";
+import createSagaMiddleware from 'redux-saga';
+
 
 const createReduxStore = () =>
 {
+  const sagaMiddleware = createSagaMiddleware();
+
   const store = createStore(
     rootReducer,
     compose(
-      applyMiddleware(authMiddleware),
+      applyMiddleware(sagaMiddleware),
       window.__REDUX_DEVTOOLS_EXTENSION__
         ? window.__REDUX_DEVTOOLS_EXTENSION__()
         : (noop) => noop
     )
   );
+
+  sagaMiddleware.run(rootSaga);
+
 
   return store;
 };
