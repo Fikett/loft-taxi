@@ -3,11 +3,15 @@ import { combineReducers, Reducer } from "redux";
 import {
   fetchAuthFailure,
   fetchAuthSuccess,
+  fetchRegisterFailure,
+  fetchRegisterRequest,
+  fetchRegisterSuccess,
   saveToken,
   setLoginData,
   setPaymentData,
+  setRegisterData,
 } from "./actions";
-import { ILoginData, IPaymentData } from "@modules-auth";
+import { IFetchRegisterRequest, ILoginData, IPaymentData } from "@modules-auth";
 
 const authenticated = handleActions(
   {
@@ -21,13 +25,11 @@ const authenticated = handleActions(
 const token: Reducer<string, any> = handleActions<string, any>(
   {
     [saveToken.toString()]: (state, { payload }) => {
-      return  payload ;
+      return payload;
     },
   },
   ""
 );
-
-
 
 const loginDataInitialState: ILoginData = {
   login: "",
@@ -41,6 +43,35 @@ const loginData: Reducer<ILoginData, any> = handleActions<ILoginData, any>(
     },
   },
   loginDataInitialState
+);
+
+const registerDataInitialState: IFetchRegisterRequest = {
+  email: "",
+  name: "",
+  password: "",
+  surname: "",
+};
+
+const registerData: Reducer<IFetchRegisterRequest, any> = handleActions<
+  IFetchRegisterRequest,
+  any
+>(
+  {
+    [fetchRegisterRequest.toString()]: (state, { payload }) => {
+      return registerDataInitialState;
+    },
+    [fetchRegisterFailure.toString()]: (state, { payload }) => {
+      return registerDataInitialState;
+    },
+
+    [fetchRegisterSuccess.toString()]: (state, { payload }) => {
+      return payload;
+    },
+    [setRegisterData.toString()]: (state, { payload }) => {
+      return { ...state, ...payload };
+    },
+  },
+  registerDataInitialState
 );
 
 const paymentDataInitialState: IPaymentData = {};
@@ -60,5 +91,6 @@ export default combineReducers({
   authenticated,
   loginData,
   paymentData,
-  token
+  token,
+  registerData
 });

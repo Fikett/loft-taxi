@@ -52,13 +52,13 @@ async function getData(url = "", data = {}) {
   return await response.json(); // parses JSON response into native JavaScript objects
 }
 
-const fetchAuth: IFetchAuth = (request) =>
+export const fetchAuth: IFetchAuth = (request) =>
   postData("https://loft-taxi.glitch.me/auth", request);
 
 const fetchRegister: IFetchRegister = (request) =>
   postData("https://loft-taxi.glitch.me/register ", request);
 
-const fetchUpdatePayment: IFetchUpdatePayment = (request: ISavePaymentData) =>
+  export const fetchUpdatePayment: IFetchUpdatePayment = (request: ISavePaymentData) =>
   postData("https://loft-taxi.glitch.me/card", request);
 
 const fetchAddressList: IFetchAddressList = () =>

@@ -7,7 +7,29 @@ import { selectPaymentData } from "modules/auth/selectors";
 import FillPaymentInfoPreview from "./FillPaymentInfoPreview";
 import _ from "lodash";
 import { selectcurrentRoute } from "modules/routes/selectors";
+import { makeStyles } from "@material-ui/core/styles";
+
+const styles = () => ({
+  container: {
+    position: "relative",
+    zIndex: "-10",
+  },
+  map: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    width: "100%",
+    height: (props) => props.height - 64,
+  },
+});
+
+const useStyles = makeStyles(styles);
+
 const MapContainer = () => {
+  const classes = useStyles({ height: window.innerHeight });
+
   const paymentData = useSelector(selectPaymentData);
 
   const currentRoute = useSelector(selectcurrentRoute);
@@ -77,7 +99,8 @@ const MapContainer = () => {
 
   return (
     <>
-      <div className="map-container" ref={mapRef}>
+      <div className={classes.container}>
+        <div className={classes.map} ref={mapRef} />
         {_.isEmpty(paymentData) ? <FillPaymentInfoPreview /> : <RouteForm />}
       </div>
     </>

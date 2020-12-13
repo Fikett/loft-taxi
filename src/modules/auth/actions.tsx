@@ -20,6 +20,14 @@ export const fetchAuthFailure = createAction<IfetchAuthFailurePayload>(
   "fetchAuthFailure"
 );
 
+export const fetchRegisterRequest = createAction("fetchRegisterRequest");
+export const fetchRegisterSuccess = createAction("fetchRegisterSuccess");
+export const fetchRegisterFailure = createAction("fetchRegisterFailure");
+
+export const setRegisterData = createAction("setRegisterData");
+
+
+
 export const setLoginData = createAction<ILoginData>("setLoginData");
 export const setPaymentData = createAction<IPaymentData>("setPaymentData");
 

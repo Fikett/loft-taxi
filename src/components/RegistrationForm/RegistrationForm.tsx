@@ -11,6 +11,10 @@ import {
 import { LoginContext } from "pages/HomePage/HomePage";
 import { PagesEnum } from "utils/common";
 import { useHistory } from "react-router-dom";
+import { IFetchRegisterRequest } from "@modules-auth";
+import { fetchRegisterRequest, setRegisterData } from "modules/auth/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { selectRegisterData } from "modules/auth/selectors";
 
 const styles = () => ({
   header: {
@@ -28,15 +32,11 @@ const useStyles = makeStyles(styles);
 const RegistrationForm: React.FC = () => {
   const classes = useStyles();
 
-  const loginContext = useContext(LoginContext);
+  const dispatch = useDispatch();
+
+  const registerData = useSelector(selectRegisterData);
+
   const history = useHistory();
-
-  const [email, updateemail] = useState("");
-  const [name, updatename] = useState("");
-  const [surname, updatesurname] = useState("");
-  const [password, updatepassword] = useState("");
-
-  useEffect(() => {}, []);
 
   return (
     <>
@@ -79,8 +79,9 @@ const RegistrationForm: React.FC = () => {
                 placeholder="Адрес электронной почты"
                 error={false}
                 helperText=""
+                value={registerData.email}
                 onChange={(event) => {
-                  updateemail(event.target.value);
+                  dispatch(setRegisterData({ email: event.target.value }));
                 }}
               />
             </Grid>
@@ -91,8 +92,9 @@ const RegistrationForm: React.FC = () => {
                 placeholder="Имя"
                 error={false}
                 helperText=""
+                value={registerData.name}
                 onChange={(event) => {
-                  updatename(event.target.value);
+                  dispatch(setRegisterData({ name: event.target.value }));
                 }}
               />
             </Grid>
@@ -103,8 +105,9 @@ const RegistrationForm: React.FC = () => {
                 placeholder="Фамилия"
                 error={false}
                 helperText=""
+                value={registerData.surname}
                 onChange={(event) => {
-                  updatesurname(event.target.value);
+                  dispatch(setRegisterData({ surname: event.target.value }));
                 }}
               />
             </Grid>
@@ -115,8 +118,9 @@ const RegistrationForm: React.FC = () => {
                 placeholder="Пароль"
                 error={false}
                 helperText=""
+                value={registerData.password}
                 onChange={(event) => {
-                  updatepassword(event.target.value);
+                  dispatch(setRegisterData({ password: event.target.value }));
                 }}
               />
             </Grid>
@@ -125,13 +129,19 @@ const RegistrationForm: React.FC = () => {
                 onClick={(event) => {
                   event.preventDefault();
 
+                  let req: IFetchRegisterRequest = {
+                    ...registerData,
+                  };
+
+                  dispatch(fetchRegisterRequest(req));
+
                   history.push("/map");
                 }}
                 variant="contained"
                 color="primary"
                 type="submit"
               >
-                Зарегестрироваться
+                Зарегистрироваться
               </Button>
             </Grid>
           </Grid>
