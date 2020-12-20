@@ -1,18 +1,17 @@
 import { IProps } from "@home-page";
-import
-  {
-    Button,
-    Card,
-    Grid,
-    makeStyles,
-    Paper,
-    TextField,
-    Typography,
-  } from "@material-ui/core";
+import {
+  Button,
+  Card,
+  Grid,
+  makeStyles,
+  Paper,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import LoginForm from "components/LoginForm/LoginForm";
 import React, { useContext, useEffect } from "react";
 import { PagesEnum } from "../utils/common";
-import { LoginContext } from "./HomePage";
+import { LoginContext } from "./HomePage/HomePage";
 
 const styles = () => ({
   header: {
@@ -39,21 +38,16 @@ const stylesBg = () => ({
 
 const useStyles = makeStyles(styles);
 
-const Login: React.FC<IProps> = (props) =>
-{
+const Login: React.FC = () => {
   const classes = useStyles();
 
+  //const loginContext = useContext(LoginContext);
 
-  const loginContext = useContext(LoginContext);
-
-  useEffect(() => { }, []);
+  useEffect(() => {}, []);
 
   return (
     <>
-      <LoginForm setCurentPage={props.setCurentPage} />
-
-
-
+      <LoginForm  />
     </>
   );
 };

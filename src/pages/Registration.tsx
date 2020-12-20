@@ -10,7 +10,7 @@ import
     Typography,
   } from "@material-ui/core";
 import { PagesEnum } from "../utils/common";
-import { LoginContext } from "./HomePage";
+import { LoginContext } from "./HomePage/HomePage";
 import RegistrationForm from "components/RegistrationForm/RegistrationForm";
 
 const styles = () => ({
@@ -26,7 +26,7 @@ const styles = () => ({
 });
 const useStyles = makeStyles(styles);
 
-const Registration: React.FC<IProps> = (props) =>
+const Registration: React.FC = () =>
 {
   const classes = useStyles();
 
@@ -36,7 +36,7 @@ const Registration: React.FC<IProps> = (props) =>
 
   return (
     <>
-      < RegistrationForm setCurentPage={props.setCurentPage} />
+      < RegistrationForm  />
 
 
     </>

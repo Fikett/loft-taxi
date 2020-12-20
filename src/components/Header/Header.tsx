@@ -6,14 +6,14 @@ import {
   Typography,
   withStyles,
 } from "@material-ui/core";
-import { LoginContext } from "pages/HomePage";
+import { LoginContext } from "pages/HomePage/HomePage";
 import React, { useContext, useEffect } from "react";
 import { PagesEnum } from "../../utils/common";
 import { Logo } from "loft-taxi-mui-theme";
+import { fetchAuthFailure } from "modules/auth/actions";
+import { useDispatch } from "react-redux";
 
-type IProps = {
-  setCurentPage: Function;
-};
+import { Switch, Route, useHistory } from "react-router-dom";
 
 const styles = {
   appBar: {
@@ -26,8 +26,12 @@ const styles = {
 
 const useStyles = makeStyles(styles);
 
-const Header: React.FC<IProps> = (props) => {
+const Header: React.FC = () => {
   const classes = useStyles();
+
+  const dispatch = useDispatch();
+
+  const history = useHistory();
 
   const loginContext = useContext(LoginContext);
 
@@ -41,21 +45,16 @@ const Header: React.FC<IProps> = (props) => {
             <Logo />
           </Typography>
           {loginContext.status && (
-            <Button onClick={() => props.setCurentPage(PagesEnum.Map)}>
-              Карта
-            </Button>
+            <Button onClick={() => history.push("/map")}>Карта</Button>
           )}
 
           {loginContext.status && (
-            <Button onClick={() => props.setCurentPage(PagesEnum.Profile)}>
-              Профиль
-            </Button>
+            <Button onClick={() => history.push("/profile")}>Профиль</Button>
           )}
           {loginContext.status ? (
             <Button
               onClick={() => {
-                loginContext.logoutFunc();
-                props.setCurentPage(PagesEnum.Login);
+                dispatch(fetchAuthFailure(false));
               }}
             >
               Выйти
@@ -63,16 +62,15 @@ const Header: React.FC<IProps> = (props) => {
           ) : (
             <Button
               data-testid="headerLoginBtn"
-              onClick={() => props.setCurentPage(PagesEnum.Login)}
+              onClick={() => {
+                history.push("/login");
+              }}
             >
               Войти
             </Button>
           )}
         </Toolbar>
       </AppBar>
-
-    
-    
     </>
   );
 };

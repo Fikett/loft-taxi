@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { IProps } from "@home-page";
 import {
   Button,
@@ -8,9 +8,9 @@ import {
   TextField,
   Typography,
 } from "@material-ui/core";
-import { LoginContext } from "pages/HomePage";
+import { LoginContext } from "pages/HomePage/HomePage";
 import { PagesEnum } from "utils/common";
-
+import { useHistory } from "react-router-dom";
 
 const styles = () => ({
   header: {
@@ -25,10 +25,16 @@ const styles = () => ({
 });
 const useStyles = makeStyles(styles);
 
-const RegistrationForm: React.FC<IProps> = (props) => {
+const RegistrationForm: React.FC = () => {
   const classes = useStyles();
 
   const loginContext = useContext(LoginContext);
+  const history = useHistory();
+
+  const [email, updateemail] = useState("");
+  const [name, updatename] = useState("");
+  const [surname, updatesurname] = useState("");
+  const [password, updatepassword] = useState("");
 
   useEffect(() => {}, []);
 
@@ -55,10 +61,8 @@ const RegistrationForm: React.FC<IProps> = (props) => {
                 <Button
                   onClick={(event) => {
                     event.preventDefault();
-                    // event.stopPropagation();
-                    // event.nativeEvent.stopImmediatePropagation();
 
-                    props.setCurentPage(PagesEnum.Login);
+                    history.push("/login");
                   }}
                   variant="contained"
                   color="primary"
@@ -75,6 +79,9 @@ const RegistrationForm: React.FC<IProps> = (props) => {
                 placeholder="Адрес электронной почты"
                 error={false}
                 helperText=""
+                onChange={(event) => {
+                  updateemail(event.target.value);
+                }}
               />
             </Grid>
             <Grid item xs={6}>
@@ -84,6 +91,9 @@ const RegistrationForm: React.FC<IProps> = (props) => {
                 placeholder="Имя"
                 error={false}
                 helperText=""
+                onChange={(event) => {
+                  updatename(event.target.value);
+                }}
               />
             </Grid>
             <Grid item xs={6}>
@@ -93,6 +103,9 @@ const RegistrationForm: React.FC<IProps> = (props) => {
                 placeholder="Фамилия"
                 error={false}
                 helperText=""
+                onChange={(event) => {
+                  updatesurname(event.target.value);
+                }}
               />
             </Grid>
             <Grid item xs={12}>
@@ -102,19 +115,17 @@ const RegistrationForm: React.FC<IProps> = (props) => {
                 placeholder="Пароль"
                 error={false}
                 helperText=""
+                onChange={(event) => {
+                  updatepassword(event.target.value);
+                }}
               />
             </Grid>
             <Grid item xs={12}>
               <Button
-			  
                 onClick={(event) => {
                   event.preventDefault();
-                  // event.stopPropagation();
-                  // event.nativeEvent.stopImmediatePropagation();
 
-				  loginContext.loginFunc("test", "testtest");
-				  props.setCurentPage(PagesEnum.Map);
-				  
+                  history.push("/map");
                 }}
                 variant="contained"
                 color="primary"
