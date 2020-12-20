@@ -11,9 +11,10 @@ import React, { useContext, useEffect } from "react";
 import { PagesEnum } from "../../utils/common";
 import { Logo } from "loft-taxi-mui-theme";
 import { fetchAuthFailure } from "modules/auth/actions";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Switch, Route, useHistory } from "react-router-dom";
+import { selectAuthenticated } from "modules/auth";
 
 const styles = {
   appBar: {
@@ -33,9 +34,7 @@ const Header: React.FC = () => {
 
   const history = useHistory();
 
-  const loginContext = useContext(LoginContext);
-
-  useEffect(() => {}, []);
+  const isLoggedIn = useSelector(selectAuthenticated);
 
   return (
     <>
@@ -44,17 +43,18 @@ const Header: React.FC = () => {
           <Typography className={classes.grow}>
             <Logo />
           </Typography>
-          {loginContext.status && (
+          {isLoggedIn && (
             <Button onClick={() => history.push("/map")}>Карта</Button>
           )}
 
-          {loginContext.status && (
+          {isLoggedIn && (
             <Button onClick={() => history.push("/profile")}>Профиль</Button>
           )}
-          {loginContext.status ? (
+          {isLoggedIn ? (
             <Button
+            data-testid="headerExitBtn"
               onClick={() => {
-                dispatch(fetchAuthFailure(false));
+                dispatch(fetchAuthFailure());
               }}
             >
               Выйти

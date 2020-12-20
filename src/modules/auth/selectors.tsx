@@ -1,4 +1,4 @@
-import { IFetchRegisterRequest, ILoginData, IPaymentData } from "@modules-auth";
+import { IFetchRegisterRequest, ILoginData } from "@modules-auth";
 import { createSelector } from "reselect";
 
 export const selectAuthenticated = createSelector<any, boolean, boolean>(
@@ -11,20 +11,30 @@ export const selecttoken = createSelector<any, string, string>(
   (token) => token
 );
 
-
 export const selectLoginData = createSelector<any, ILoginData, ILoginData>(
   ({ auth }) => auth.loginData,
   (loginData) => loginData
 );
 
-export const selectPaymentData = createSelector<any, IPaymentData, IPaymentData>(
-  ({ auth }) => auth.paymentData,
-  (paymentData) => paymentData
-);
-
-
-export const selectRegisterData = createSelector<any, IFetchRegisterRequest, IFetchRegisterRequest>(
+export const selectRegisterData = createSelector<
+  any,
+  IFetchRegisterRequest,
+  IFetchRegisterRequest
+>(
   ({ auth }) => auth.registerData,
   (registerData) => registerData
 );
+
+export const selectLoginError = createSelector<any, string, string>(
+  ({ auth }) => auth.loginError,
+  (loginError) => loginError
+);
+
+export const selectRegisterError = createSelector<any, string, string>(
+  ({ auth }) => auth.registerError,
+  (registerError) => registerError
+);
+
+
+
 

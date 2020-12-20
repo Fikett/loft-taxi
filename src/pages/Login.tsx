@@ -1,20 +1,10 @@
-import { IProps } from "@home-page";
-import {
-  Button,
-  Card,
-  Grid,
-  makeStyles,
-  Paper,
-  TextField,
-  Typography,
-} from "@material-ui/core";
+import { Grid, makeStyles, Paper } from "@material-ui/core";
 import LoginForm from "components/LoginForm/LoginForm";
 import React, { useContext, useEffect } from "react";
-import { PagesEnum } from "../utils/common";
-import { LoginContext } from "./HomePage/HomePage";
+
 import { Logo } from "loft-taxi-mui-theme";
 
-import img from "../assets/img/login-bg.png";
+import img from "../assets/img/login-background.jpg";
 
 const styles = () => ({
   background: {
@@ -29,7 +19,7 @@ const Login: React.FC = () => {
   const classes = useStyles();
 
   return (
-   
+    <>
       <Paper className={classes.background}>
         <Grid
           container
@@ -47,7 +37,7 @@ const Login: React.FC = () => {
           </Grid>
         </Grid>
       </Paper>
-    
+    </>
   );
 };
 

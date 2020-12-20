@@ -1,31 +1,35 @@
-import { IProps } from "@home-page";
 import {
   Button,
- 
   Grid,
+  Link,
   makeStyles,
   Paper,
   TextField,
   Typography,
 } from "@material-ui/core";
-import { LoginContext } from "pages/HomePage/HomePage";
 import React, { useContext, useEffect, useState } from "react";
-import { PagesEnum } from "utils/common";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchAuthRequest, setLoginData } from "modules/auth/actions";
-import { IFetchAuthRequestPayload } from "@modules-auth";
-import { selectLoginData } from "modules/auth/selectors";
+import {
+  clearLoginError,
+  fetchAuthRequest,
+  setLoginData,
+} from "modules/auth/actions";
+import { IFetchAuthRequestPayload, ILoginData } from "@modules-auth";
+import { selectLoginData, selectLoginError } from "modules/auth/selectors";
 import { useHistory } from "react-router-dom";
+import { useForm } from "react-hook-form";
+
+import { Link as RouterLink, Redirect } from "react-router-dom";
 
 const styles = (theme) => ({
   header: {
-    marginBottom: 30
+    marginBottom: 30,
   },
   subheader: {
-    marginBottom: 10
+    marginBottom: 10,
   },
   input: {
-    marginBottom: 30
+    marginBottom: 30,
   },
   paper: {
     marginTop: theme.spacing(3),
@@ -35,112 +39,113 @@ const styles = (theme) => ({
       marginTop: theme.spacing(6),
       marginBottom: theme.spacing(6),
       padding: "44px 60px",
-      minWidth: "500px"
-    }
+      minWidth: "500px",
+    },
   },
-  loginBackground: {
-    backgroundImage: `url(${"assets/login-background.jpg"})`,
-    backgroundSize: "cover"
-  }
 });
 
 const useStyles = makeStyles(styles);
 
 const LoginForm: React.FC = () => {
   const classes = useStyles();
-
+  const dispatch = useDispatch();
   const history = useHistory();
 
   const loginData = useSelector(selectLoginData);
 
-  const dispatch = useDispatch();
+  const loginError = useSelector(selectLoginError);
+
+  const { register, setValue, handleSubmit, errors } = useForm<ILoginData>();
+
+  useEffect(() => {
+    dispatch(clearLoginError());
+  }, []);
+
+  const onSubmit = (data: ILoginData) => {
+    console.log("login submit");
+
+    dispatch(setLoginData(data));
+
+    //event.preventDefault();
+
+    let req: IFetchAuthRequestPayload = {
+      email: data.email,
+      password: data.password,
+    };
+
+    req = { email: "test@test.com", password: "123123" };
+
+    dispatch(fetchAuthRequest(req));
+  };
 
   return (
     <Paper className={classes.paper}>
-      
-        <form>
-          <Grid container>
-            <Grid item xs={12}>
-              <Typography
-                className={classes.header}
-                component="h1"
-                variant="h4"
-                align="left"
-              >
-                Войти
-              </Typography>
-              <Typography
-                className={classes.subheader}
-                component="p"
-                align="left"
-              >
-                Новый пользователь?
-                <Button
-                  onClick={(event) => {
-                    event.preventDefault();
-
-                    history.push("/register");
-                  }}
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                >
-                  Зарегистрируйтесь
-                </Button>
-              </Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                name="name"
-                label={"Имя пользователя"}
-                placeholder={"Имя пользователя"}
-                error={false}
-                helperText={""}
-                value={loginData.login}
-                onChange={(event) => {
-                  dispatch(setLoginData({ login: event.target.value }));
-                }}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                name="password"
-                label={"Пароль"}
-                placeholder={"Пароль"}
-                error={false}
-                helperText={""}
-                value={loginData.password}
-                onChange={(event) => {
-                  dispatch(setLoginData({ password: event.target.value }));
-                }}
-              />
-            </Grid>
-            <Grid item xs={12} align="right">
-              <Button
-                data-testid="loginBtn"
-                onClick={(event) => {
-                  event.preventDefault();
-
-                  let req: IFetchAuthRequestPayload = {
-                    email: loginData.login,
-                    password: loginData.password,
-                  };
-
-                  //req = { email: "test@test.com", password: "123123" };
-
-                  dispatch(fetchAuthRequest(req));
-                }}
-                variant="contained"
-                color="primary"
-                type="submit"
-              >
-                Войти
-              </Button>
-            </Grid>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Grid container>
+          <Grid item xs={12}>
+            <Typography
+              className={classes.header}
+              component="h1"
+              variant="h4"
+              align="left"
+            >
+              Войти
+            </Typography>
+            <Typography
+              className={classes.subheader}
+              component="p"
+              align="left"
+            >
+              Новый пользователь?
+              <Link component={RouterLink} to="/register">
+                {" "}
+                Зарегистрируйтесь{" "}
+              </Link>
+            </Typography>
           </Grid>
-        </form>
-     
-      </Paper>
+          <Grid item xs={12}>
+            <TextField
+              required
+              name="email"
+              fullWidth
+              type={"email"}
+              label={"Имя пользователя"}
+              className={classes.input}
+              placeholder={"Имя пользователя"}
+              error={loginError ? true : false}
+              helperText={loginError}
+              inputRef={register}
+              defaultValue={loginData.email}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              required
+              name="password"
+              fullWidth
+              label={"Пароль"}
+              className={classes.input}
+              type={"password"}
+              placeholder={"Пароль"}
+              error={loginError ? true : false}
+              helperText={loginError}
+              inputRef={register}
+              defaultValue={loginData.password}
+            />
+          </Grid>
+          <Grid item xs={12} align="right">
+            <Button
+              data-testid="loginBtn"
+              variant="contained"
+              color="primary"
+              type="submit"
+            >
+              Войти
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+    </Paper>
   );
 };
 

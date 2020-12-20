@@ -2,9 +2,11 @@ import { Grid, makeStyles, Paper, Typography } from "@material-ui/core";
 import PaymentForm from "components/Profile/PaymentForm";
 import React, { useEffect } from "react";
 
+import img from "../assets/img/login-background.jpg";
+
 const styles = (theme) => ({
   background: {
-    backgroundImage: `url(${"assets/login-background.jpg"})`,
+    backgroundImage: `url(${img})`,
     backgroundSize: "cover",
   },
   paper: {
@@ -32,7 +34,6 @@ const Profile = () => {
 
   return (
     <>
-      Profile
       <Paper className={classes.background}>
         <Grid
           container

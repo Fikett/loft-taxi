@@ -1,5 +1,4 @@
 import { ISelectItem } from "@common";
-import { ILoginData, IPaymentData } from "@modules-auth";
 import _ from "lodash";
 import { createSelector } from "reselect";
 

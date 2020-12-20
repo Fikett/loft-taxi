@@ -9,7 +9,7 @@ import {
   getAddressListSuccess,
 } from "./actions";
 
-const addressesList: Reducer<string, any> = handleActions<string, any>(
+const addressesList: Reducer<string[], any> = handleActions<string[], any>(
   {
     [getAddressListRequest.toString()]: (state, { payload }) => {
       return Array<string>();
@@ -25,7 +25,7 @@ const addressesList: Reducer<string, any> = handleActions<string, any>(
   Array<string>()
 );
 
-const currentRoute: Reducer<string, any> = handleActions<string, any>(
+const currentRoute: Reducer<[], any> = handleActions<[], any>(
   {
     [calculateRouteRequest.toString()]: (state, { payload }) => {
       return [];

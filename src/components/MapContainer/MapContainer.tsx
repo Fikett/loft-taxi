@@ -3,11 +3,11 @@ import mapboxgl from "mapbox-gl";
 import "./MapContainer.css";
 import RouteForm from "components/RouteForm/RouteForm";
 import { useSelector } from "react-redux";
-import { selectPaymentData } from "modules/auth/selectors";
 import FillPaymentInfoPreview from "./FillPaymentInfoPreview";
 import _ from "lodash";
 import { selectcurrentRoute } from "modules/routes/selectors";
 import { makeStyles } from "@material-ui/core/styles";
+import { selectPaymentData } from "modules/payment/selectors";
 
 const styles = () => ({
   container: {

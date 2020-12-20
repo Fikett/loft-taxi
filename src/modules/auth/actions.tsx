@@ -2,9 +2,9 @@ import {
   IfetchAuthFailurePayload,
   IFetchAuthRequestPayload,
   IfetchAuthSuccessPayload,
+  IFetchRegisterRequest,
   ILoginData,
-  IPaymentData,
-  ISavePaymentData,
+  IRegisterStatus,
 } from "@modules-auth";
 import { createAction } from "redux-actions";
 
@@ -21,22 +21,20 @@ export const fetchAuthFailure = createAction<IfetchAuthFailurePayload>(
 );
 
 export const fetchRegisterRequest = createAction("fetchRegisterRequest");
-export const fetchRegisterSuccess = createAction("fetchRegisterSuccess");
+export const fetchRegisterSuccess = createAction<IRegisterStatus>(
+  "fetchRegisterSuccess"
+);
 export const fetchRegisterFailure = createAction("fetchRegisterFailure");
 
-export const setRegisterData = createAction("setRegisterData");
+export const setRegisterData = createAction<IFetchRegisterRequest>(
+  "setRegisterData"
+);
 
 
+export const setRegisterError = createAction<string>("setRegisterError");
+export const clearRegisterError = createAction("clearRegisterError");
 
 export const setLoginData = createAction<ILoginData>("setLoginData");
-export const setPaymentData = createAction<IPaymentData>("setPaymentData");
 
-export const saveCardRequest = createAction<ISavePaymentData>(
-  "saveCardRequest"
-);
-export const saveCardSuccess = createAction<IfetchAuthSuccessPayload>(
-  "saveCardSuccess"
-);
-export const saveCardFailure = createAction<IfetchAuthFailurePayload>(
-  "saveCardFailure"
-);
+export const setLoginError = createAction<string>("setLoginError");
+export const clearLoginError = createAction("clearLoginError");

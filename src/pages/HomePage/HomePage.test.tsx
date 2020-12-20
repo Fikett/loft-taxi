@@ -30,7 +30,7 @@ describe("HomePage", () => {
     // };
     const history = createMemoryHistory();
 
-    let aaa = render(
+    render(
       <Provider store={store}>
         <HomePage />
       </Provider>,
