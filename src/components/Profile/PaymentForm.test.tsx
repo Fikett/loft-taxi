@@ -2,6 +2,46 @@ import React from "react";
 import { fireEvent, render } from "@testing-library/react";
 import { Provider } from "react-redux";
 import PaymentForm from "./PaymentForm";
+import api from "modules/api";
+import { fetchUpdatePaymentFlow } from "modules/payment/sagas";
+import { runSaga } from "redux-saga";
+
+describe("paymentSaga", () => {
+  it("fetchUpdatePaymentFlow", async () => {
+    const fakeResponse = { success: true, error: "" };
+    const requestAuthors = jest
+      .spyOn(api, "fetchUpdatePayment")
+      .mockImplementation(() => Promise.resolve(fakeResponse));
+
+    const dispatched = [];
+    const result = await runSaga(
+      {
+        dispatch: (action) => dispatched.push(action),
+      },
+      fetchUpdatePaymentFlow,
+      {
+        payload: {
+          cardNumber: "",
+          expiryDate: "",
+          cardName: "",
+          cvc: "",
+          token: "",
+        },
+      }
+    );
+
+    expect(requestAuthors).toHaveBeenCalledTimes(1);
+
+    expect(dispatched).toEqual([
+      {
+        payload: true,
+        type: "saveCardSuccess",
+      },
+    ]);
+
+    requestAuthors.mockClear();
+  });
+});
 
 describe("PaymentForm", () => {
   // beforeEach(() => { });

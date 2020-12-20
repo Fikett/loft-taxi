@@ -1,4 +1,4 @@
-import { ILoginData, IPaymentData } from "@modules-auth";
+import { IFetchRegisterRequest, ILoginData, IPaymentData } from "@modules-auth";
 import { createSelector } from "reselect";
 
 export const selectAuthenticated = createSelector<any, boolean, boolean>(
@@ -20,5 +20,11 @@ export const selectLoginData = createSelector<any, ILoginData, ILoginData>(
 export const selectPaymentData = createSelector<any, IPaymentData, IPaymentData>(
   ({ auth }) => auth.paymentData,
   (paymentData) => paymentData
+);
+
+
+export const selectRegisterData = createSelector<any, IFetchRegisterRequest, IFetchRegisterRequest>(
+  ({ auth }) => auth.registerData,
+  (registerData) => registerData
 );
 
