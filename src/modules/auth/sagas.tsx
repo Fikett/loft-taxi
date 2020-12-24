@@ -49,12 +49,23 @@ function* fetchRegisterWatcher() {
   yield takeEvery(fetchRegisterRequest, fetchRegisterFlow);
 }
 
-export function* fetchRegisterFlow({ payload }: { payload: IFetchRegisterRequest }) {
+export function* fetchRegisterFlow({
+  payload,
+}: {
+  payload: IFetchRegisterRequest & { history: any };
+}) {
   try {
-    const response:IFetchRegisterResponse = yield call(api.fetchRegister, payload);
+    const response: IFetchRegisterResponse = yield call(
+      api.fetchRegister,
+      payload
+    );
 
     if (response.success) {
+      yield put(fetchAuthSuccess());
       yield put(fetchRegisterSuccess());
+      yield put(saveToken(response.token));
+
+      payload.history.push("/map");
     } else {
       yield put(fetchRegisterFailure());
       yield put(setRegisterError(response.error));

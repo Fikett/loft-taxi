@@ -20,7 +20,9 @@ export const fetchAuthFailure = createAction<IfetchAuthFailurePayload>(
   "fetchAuthFailure"
 );
 
-export const fetchRegisterRequest = createAction("fetchRegisterRequest");
+export const fetchRegisterRequest = createAction<
+  IFetchRegisterRequest & { history: any }
+>("fetchRegisterRequest");
 export const fetchRegisterSuccess = createAction<IRegisterStatus>(
   "fetchRegisterSuccess"
 );
@@ -29,7 +31,6 @@ export const fetchRegisterFailure = createAction("fetchRegisterFailure");
 export const setRegisterData = createAction<IFetchRegisterRequest>(
   "setRegisterData"
 );
-
 
 export const setRegisterError = createAction<string>("setRegisterError");
 export const clearRegisterError = createAction("clearRegisterError");

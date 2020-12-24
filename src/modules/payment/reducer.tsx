@@ -1,6 +1,12 @@
 import { handleActions } from "redux-actions";
 import { combineReducers, Reducer } from "redux";
-import { clearPaymentError, saveCardRequest, setPaymentData, setPaymentError } from "./actions";
+import {
+  clearPaymentError,
+  saveCardRequest,
+  setPaymentData,
+  setPaymentError,
+  setPaymentSavedWindowShow,
+} from "./actions";
 import { IPaymentData } from "@modules-payment";
 
 const paymentDataInitialState: IPaymentData = {
@@ -17,11 +23,9 @@ const paymentData: Reducer<IPaymentData, any> = handleActions<
     [setPaymentData.toString()]: (state, { payload }) => {
       return { ...state, ...payload };
     },
-    
   },
   paymentDataInitialState
 );
-
 
 const paymentError: Reducer<string, any> = handleActions<string, any>(
   {
@@ -38,7 +42,20 @@ const paymentError: Reducer<string, any> = handleActions<string, any>(
   ""
 );
 
+const paymentSavedWindowShow: Reducer<boolean, any> = handleActions<
+  boolean,
+  any
+>(
+  {
+    [setPaymentSavedWindowShow.toString()]: (state, { payload }) => {
+      return payload;
+    },
+  },
+  false
+);
+
 export default combineReducers({
   paymentData,
-  paymentError
+  paymentError,
+  paymentSavedWindowShow
 });

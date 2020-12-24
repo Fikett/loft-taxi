@@ -21,3 +21,6 @@ export const getPaymentFailure = createAction("getPaymentFailure");
 
 export const setPaymentError = createAction<string>("setPaymentError");
 export const clearPaymentError = createAction("clearPaymentError");
+
+export const setPaymentSavedWindowShow = createAction<boolean>("setPaymentSavedWindowShow");
+

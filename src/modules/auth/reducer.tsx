@@ -118,24 +118,6 @@ const registrationStatusInitialState: IRegisterStatus = {
   success: false,
   token: "string",
 };
-const registrationStatus: Reducer<IRegisterStatus, any> = handleActions<
-  IRegisterStatus,
-  any
->(
-  {
-    [fetchRegisterRequest.toString()]: (state, { payload }) => {
-      return registerDataInitialState;
-    },
-    [fetchRegisterFailure.toString()]: (state, { payload }) => {
-      return registerDataInitialState;
-    },
-
-    [fetchRegisterSuccess.toString()]: (state, { payload }) => {
-      return payload;
-    },
-  },
-  registrationStatusInitialState
-);
 
 export default combineReducers({
   authenticated,

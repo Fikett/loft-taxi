@@ -66,14 +66,10 @@ const LoginForm: React.FC = () => {
 
     dispatch(setLoginData(data));
 
-    //event.preventDefault();
-
     let req: IFetchAuthRequestPayload = {
       email: data.email,
       password: data.password,
     };
-
-    req = { email: "test@test.com", password: "123123" };
 
     dispatch(fetchAuthRequest(req));
   };

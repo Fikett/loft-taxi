@@ -1,16 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
-import { IProps } from "@home-page";
+import React, { useEffect } from "react";
 import {
   Button,
-  Card,
   Grid,
   makeStyles,
   Paper,
   TextField,
   Typography,
 } from "@material-ui/core";
-import { LoginContext } from "pages/HomePage/HomePage";
-import { PagesEnum } from "utils/common";
 import { useHistory } from "react-router-dom";
 import { IFetchRegisterRequest } from "@modules-auth";
 import {
@@ -23,7 +19,6 @@ import {
   selectRegisterData,
   selectRegisterError,
 } from "modules/auth/selectors";
-
 import { useForm } from "react-hook-form";
 import { Link as RouterLink } from "react-router-dom";
 import { Link } from "@material-ui/core";
@@ -84,9 +79,7 @@ const RegistrationForm: React.FC = () => {
       surname: data.surname,
     };
 
-    dispatch(fetchRegisterRequest(req));
-
-    history.push("/map");
+    dispatch(fetchRegisterRequest({ ...req, history }));
   };
 
   return (

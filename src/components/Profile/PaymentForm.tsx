@@ -1,21 +1,21 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { MCIcon } from "loft-taxi-mui-theme";
-import { LoginContext } from "pages/HomePage/HomePage";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { Box, Paper, TextField } from "@material-ui/core";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
 import { selecttoken } from "modules/auth/selectors";
 import moment from "moment";
-import { ParsableDate } from "@material-ui/pickers/constants/prop-types";
 
 import { useForm } from "react-hook-form";
 import { saveCardRequest, setPaymentData } from "modules/payment/actions";
-import { selectPaymentData, selectPaymentError } from "modules/payment/selectors";
+import {
+  selectPaymentData,
+  selectPaymentError,
+} from "modules/payment/selectors";
 import { IPaymentData, ISavePaymentData } from "@modules-payment";
 
 const styles = (theme) => ({
@@ -42,7 +42,6 @@ const PaymentForm: React.FC = () => {
   const classes = useStyles();
 
   const dispatch = useDispatch();
-  const history = useHistory();
 
   const { register, setValue, handleSubmit, errors } = useForm<IPaymentData>();
   const token = useSelector(selecttoken);
@@ -58,12 +57,6 @@ const PaymentForm: React.FC = () => {
   }, [paymentData.date]);
 
   const onSubmit = (data: IPaymentData) => {
-    console.log("payment submit");
-
-    //event.preventDefault();
-    //event.stopPropagation();
-    //event.nativeEvent.stopImmediatePropagation();
-
     let aa: IPaymentData = {
       cardName: data.cardName,
       cardNumber: data.cardNumber,
@@ -74,14 +67,35 @@ const PaymentForm: React.FC = () => {
     dispatch(setPaymentData(aa));
 
     let a: ISavePaymentData = {
-      cardName: paymentData.cardName,
-      cardNumber: paymentData.cardNumber,
-      cvc: paymentData.cvc,
-      expiryDate: paymentData.date.toString(),
+      cardName: data.cardName,
+      cardNumber: data.cardNumber,
+      cvc: data.cvc,
+      expiryDate: moment(selectedDate).toDate().toString(),
       token: token,
     };
 
     dispatch(saveCardRequest(a));
+  };
+
+  const cvcOnChangeHandler = (event) => {
+    if (!event.target.value) {
+      event.target.value = "";
+    }
+    let cvcFormatted = event.target.value.replace(/\D/g, "").substring(0, 3);
+
+    event.target.value = cvcFormatted;
+  };
+
+  const cardNumberOnChangeHandler = (event) => {
+    if (!event.target.value) {
+      event.target.value = "";
+    }
+    const cardNumberFormated =
+      event.target.value
+        .replace(/\D/g, "")
+        .substring(0, 16)
+        .match(/.{1,4}/g) || [];
+    event.target.value = cardNumberFormated.join(" ");
   };
 
   return (
@@ -115,6 +129,7 @@ const PaymentForm: React.FC = () => {
                       inputRef={register}
                       fullWidth
                       defaultValue={paymentData.cardNumber}
+                      onChange={cardNumberOnChangeHandler}
                     />
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <DatePicker
@@ -161,6 +176,7 @@ const PaymentForm: React.FC = () => {
                       inputRef={register}
                       fullWidth
                       defaultValue={paymentData.cvc}
+                      onChange={cvcOnChangeHandler}
                     />
                   </Box>
                 </Paper>

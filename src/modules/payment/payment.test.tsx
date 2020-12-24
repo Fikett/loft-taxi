@@ -39,6 +39,10 @@ describe("paymentSaga", () => {
         payload: true,
         type: "saveCardSuccess",
       },
+      {
+        payload: true,
+        type: "setPaymentSavedWindowShow",
+      },
     ]);
 
     requestAuthors.mockClear();
@@ -96,6 +100,7 @@ describe("paymentReducer", () => {
       date: undefined,
     },
     paymentError: "",
+    paymentSavedWindowShow: false,
   };
 
   it("paymentData", () => {
@@ -124,6 +129,18 @@ describe("paymentReducer", () => {
     expect(reducer(initial, action)).toEqual({
       ...initial,
       paymentError: "test",
+    });
+  });
+
+  it("paymentSavedWindowShow", () => {
+    const action = {
+      type: "setPaymentSavedWindowShow",
+      payload: true,
+    };
+
+    expect(reducer(initial, action)).toEqual({
+      ...initial,
+      paymentSavedWindowShow: true,
     });
   });
 });

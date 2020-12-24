@@ -8,6 +8,7 @@ import _ from "lodash";
 import { selectcurrentRoute } from "modules/routes/selectors";
 import { makeStyles } from "@material-ui/core/styles";
 import { selectPaymentData } from "modules/payment/selectors";
+import RouteConfirmedWindow from "./RouteConfirmedWindow";
 
 const styles = () => ({
   container: {
@@ -34,11 +35,15 @@ const MapContainer = () => {
 
   const currentRoute = useSelector(selectcurrentRoute);
 
+  const [isOrderConfirmed, updateIsOrderConfirmed] = useState<boolean>(false);
+
   let mapRef = createRef();
 
   const [map, setmap] = useState(null);
 
   useEffect(() => {
+    updateIsOrderConfirmed(false);
+
     let a = (mapboxgl.accessToken =
       "pk.eyJ1Ijoic2F0YW5zZGVlciIsImEiOiJja2hrcmp6ZWEwOWZxMnNsbjc1NXlrcTd5In0.w964wIfUKgnYjQLp0Ods7Q");
 
@@ -58,6 +63,7 @@ const MapContainer = () => {
   useEffect(() => {
     if (map && currentRoute.length > 0) {
       drawRoute(map, currentRoute);
+      updateIsOrderConfirmed(true);
     }
   }, [currentRoute]);
 
@@ -97,11 +103,32 @@ const MapContainer = () => {
     });
   };
 
+  const resetMap = () => {
+    map.removeLayer("route");
+    map.removeSource("route");
+
+    updateIsOrderConfirmed(false);
+  };
+
+  let content = null;
+
+  if (_.isEmpty(paymentData)) {
+    content = <FillPaymentInfoPreview />;
+  } else {
+    if (isOrderConfirmed) {
+      content = <RouteConfirmedWindow resetMapFunc={resetMap} />;
+    } else {
+      content = <RouteForm />;
+    }
+  }
+
   return (
     <>
       <div className={classes.container}>
         <div className={classes.map} ref={mapRef} />
-        {_.isEmpty(paymentData) ? <FillPaymentInfoPreview /> : <RouteForm />}
+        {/* {_.isEmpty(paymentData) ? <FillPaymentInfoPreview /> : <RouteForm />} */}
+
+        {content}
       </div>
     </>
   );

@@ -16,6 +16,7 @@ import {
   saveCardSuccess,
   setPaymentData,
   setPaymentError,
+  setPaymentSavedWindowShow,
 } from "./actions";
 
 function* fetchfetchUpdatePaymentWatcher() {
@@ -35,6 +36,8 @@ export function* fetchUpdatePaymentFlow({
 
     if (response.success) {
       yield put(saveCardSuccess(true));
+
+      yield put(setPaymentSavedWindowShow(true));
     } else {
       yield put(saveCardFailure(false));
 
@@ -64,7 +67,7 @@ export function* fetchGetPaymentFlow({
       let req: IPaymentData = {
         cardName: response.cardName || "",
         cardNumber: response.cardNumber || "",
-        cvc: response.cardNumber || "",
+        cvc: response.cvc || "",
         date: moment(response.expiryDate || "").toDate(),
       };
 

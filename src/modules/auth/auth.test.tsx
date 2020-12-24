@@ -55,7 +55,15 @@ describe("registerSaga", () => {
         dispatch: (action) => dispatched.push(action),
       },
       fetchRegisterFlow,
-      { payload: { email: "", password: "", name: "", surname: "" } }
+      {
+        payload: {
+          email: "",
+          password: "",
+          name: "",
+          surname: "",
+          history: null,
+        },
+      }
     );
 
     expect(requestFetchRegister).toHaveBeenCalledTimes(1);
@@ -63,7 +71,15 @@ describe("registerSaga", () => {
     expect(dispatched).toEqual([
       {
         //payload: true,
+        type: "fetchAuthSuccess",
+      },
+      {
+        //payload: true,
         type: "fetchRegisterSuccess",
+      },
+      {
+        payload: "aaa",
+        type: "saveToken",
       },
     ]);
 
