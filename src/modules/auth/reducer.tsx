@@ -9,6 +9,7 @@ import {
   fetchRegisterFailure,
   fetchRegisterRequest,
   fetchRegisterSuccess,
+  resetLoginData,
   saveToken,
   setLoginData,
   setLoginError,
@@ -50,6 +51,9 @@ const loginData: Reducer<ILoginData, any> = handleActions<ILoginData, any>(
   {
     [setLoginData.toString()]: (state, { payload }) => {
       return { ...state, ...payload };
+    },
+    [resetLoginData.toString()]: (state, { payload }) => {
+      return loginDataInitialState;
     },
   },
   loginDataInitialState

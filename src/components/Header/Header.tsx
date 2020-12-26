@@ -10,7 +10,7 @@ import { LoginContext } from "pages/HomePage/HomePage";
 import React, { useContext, useEffect } from "react";
 import { PagesEnum } from "../../utils/common";
 import { Logo } from "loft-taxi-mui-theme";
-import { fetchAuthFailure } from "modules/auth/actions";
+import { fetchAuthFailure, fetchRegisterFailure, resetLoginData } from "modules/auth/actions";
 import { useDispatch, useSelector } from "react-redux";
 
 import { Switch, Route, useHistory } from "react-router-dom";
@@ -52,9 +52,11 @@ const Header: React.FC = () => {
           )}
           {isLoggedIn ? (
             <Button
-            data-testid="headerExitBtn"
+              data-testid="headerExitBtn"
               onClick={() => {
                 dispatch(fetchAuthFailure());
+                dispatch(resetLoginData());
+                dispatch(fetchRegisterFailure());
               }}
             >
               Выйти

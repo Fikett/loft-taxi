@@ -36,6 +36,9 @@ export const setRegisterError = createAction<string>("setRegisterError");
 export const clearRegisterError = createAction("clearRegisterError");
 
 export const setLoginData = createAction<ILoginData>("setLoginData");
+export const resetLoginData = createAction("resetLoginData");
+
+
 
 export const setLoginError = createAction<string>("setLoginError");
 export const clearLoginError = createAction("clearLoginError");
