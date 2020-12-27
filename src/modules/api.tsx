@@ -1,14 +1,10 @@
+import { IFetchAuth, IFetchRegister } from "@modules-auth";
 import {
-  IFetchAddressList,
-  IFetchAuth,
-  IfetchAuthFailurePayload,
-  IFetchAuthRequestPayload,
-  IfetchAuthSuccessPayload,
-  IFetchCalculateRoute,
-  IFetchRegister,
+  IFetchGetPayment,
   IFetchUpdatePayment,
   ISavePaymentData,
-} from "@modules-auth";
+} from "@modules-payment";
+import { IFetchAddressList, IFetchCalculateRoute } from "@modules-routes";
 import _ from "lodash";
 
 async function postData(url = "", data = {}) {
@@ -58,8 +54,11 @@ export const fetchAuth: IFetchAuth = (request) =>
 const fetchRegister: IFetchRegister = (request) =>
   postData("https://loft-taxi.glitch.me/register ", request);
 
-  export const fetchUpdatePayment: IFetchUpdatePayment = (request: ISavePaymentData) =>
+export const fetchUpdatePayment: IFetchUpdatePayment = (request) =>
   postData("https://loft-taxi.glitch.me/card", request);
+
+export const fetchGetPayment: IFetchGetPayment = (request) =>
+  getData("https://loft-taxi.glitch.me/card", request);
 
 const fetchAddressList: IFetchAddressList = () =>
   getData("https://loft-taxi.glitch.me/addressList ");
@@ -73,4 +72,5 @@ export default {
   fetchUpdatePayment,
   fetchAddressList,
   fetchCalculateRoute,
+  fetchGetPayment,
 };

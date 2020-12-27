@@ -1,19 +1,22 @@
-import React, { useContext, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { MCIcon } from "loft-taxi-mui-theme";
-import { LoginContext } from "pages/HomePage/HomePage";
 import { useDispatch, useSelector } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { Box, Paper, TextField } from "@material-ui/core";
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from "@date-io/date-fns";
-import { selectPaymentData, selecttoken } from "modules/auth/selectors";
-import { saveCardRequest, setPaymentData } from "modules/auth";
+import { selecttoken } from "modules/auth/selectors";
 import moment from "moment";
-import { ParsableDate } from "@material-ui/pickers/constants/prop-types";
-import { ISavePaymentData } from "@modules-auth";
+
+import { useForm } from "react-hook-form";
+import { saveCardRequest, setPaymentData } from "modules/payment/actions";
+import {
+  selectPaymentData,
+  selectPaymentError,
+} from "modules/payment/selectors";
+import { IPaymentData, ISavePaymentData } from "@modules-payment";
 
 const styles = (theme) => ({
   root: {
@@ -40,27 +43,64 @@ const PaymentForm: React.FC = () => {
 
   const dispatch = useDispatch();
 
-  const history = useHistory();
-
-  const loginContext = useContext(LoginContext);
-
+  const { register, setValue, handleSubmit, errors } = useForm<IPaymentData>();
   const token = useSelector(selecttoken);
-
   const paymentData = useSelector(selectPaymentData);
+  const paymentError = useSelector(selectPaymentError);
 
-  const [selectedDate, handleDateChange] = React.useState(new Date());
+  const [selectedDate, handleDateChange] = useState(new Date());
 
-  // useEffect(() => {
-  //   handleDateChange(paymentData.date);
-  // }, [paymentData.date]);
+  useEffect(() => {
+    let parsedDate = moment(paymentData.date).toDate();
 
-  // useEffect(() => {
-  //   dispatch(setPaymentData({ date: selectedDate }));
-  // }, [selectedDate]);
+    handleDateChange(parsedDate);
+  }, [paymentData.date]);
+
+  const onSubmit = (data: IPaymentData) => {
+    let aa: IPaymentData = {
+      cardName: data.cardName,
+      cardNumber: data.cardNumber,
+      cvc: data.cvc,
+      date: moment(selectedDate).toDate(),
+    };
+
+    dispatch(setPaymentData(aa));
+
+    let a: ISavePaymentData = {
+      cardName: data.cardName,
+      cardNumber: data.cardNumber,
+      cvc: data.cvc,
+      expiryDate: moment(selectedDate).toDate().toString(),
+      token: token,
+    };
+
+    dispatch(saveCardRequest(a));
+  };
+
+  const cvcOnChangeHandler = (event) => {
+    if (!event.target.value) {
+      event.target.value = "";
+    }
+    let cvcFormatted = event.target.value.replace(/\D/g, "").substring(0, 3);
+
+    event.target.value = cvcFormatted;
+  };
+
+  const cardNumberOnChangeHandler = (event) => {
+    if (!event.target.value) {
+      event.target.value = "";
+    }
+    const cardNumberFormated =
+      event.target.value
+        .replace(/\D/g, "")
+        .substring(0, 16)
+        .match(/.{1,4}/g) || [];
+    event.target.value = cardNumberFormated.join(" ");
+  };
 
   return (
     <>
-      <form onSubmit={() => {}}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container alignContent="center">
           <Grid item xs={12}>
             <Grid
@@ -80,17 +120,16 @@ const PaymentForm: React.FC = () => {
                     <MCIcon />
                     <TextField
                       data-testid="cardNumber"
+                      required
                       name="cardNumber"
                       label="Номер карты"
                       placeholder="0000 0000 0000 0000"
-                      error={false}
-                      helperText=""
-                      value={paymentData.cardNumber}
-                      onChange={(event) => {
-                        dispatch(
-                          setPaymentData({ cardNumber: event.target.value })
-                        );
-                      }}
+                      error={paymentError ? true : false}
+                      helperText={paymentError}
+                      inputRef={register}
+                      fullWidth
+                      defaultValue={paymentData.cardNumber}
+                      onChange={cardNumberOnChangeHandler}
                     />
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                       <DatePicker
@@ -99,35 +138,11 @@ const PaymentForm: React.FC = () => {
                         inputProps={{ "data-testid": "date" }}
                         views={["year", "month"]}
                         format="MM/yy"
+                        inputRef={register}
                         value={selectedDate}
                         onChange={handleDateChange}
                       />
-
-                      {/* <DatePicker
-                        //clearable
-                        //required
-                         inputProps={{ "data-testid": "date" }}
-                        //views={["year", "month"]}
-                        //format="MM/yy"
-                        value={paymentData.date as ParsableDate }
-                        onChange={(event) => {
-
-                         let a = moment(event).toDate();
-
-                          dispatch(setPaymentData({ date: a }));
-                        }}
-
-                        //   {...input}
-                        //   {...custom}
-                      /> */}
                     </MuiPickersUtilsProvider>
-                    {/* <RenderDatePicker
-                    clearable
-                    name="date"
-                    required
-                    label="Срок действия"
-                    inputRef={register}
-                  /> */}
                   </Box>
                 </Paper>
               </Grid>
@@ -141,50 +156,28 @@ const PaymentForm: React.FC = () => {
                   >
                     <TextField
                       name="cardName"
-                      label="Имя владельца"
-                      placeholder="USER NAME"
-                      error={false}
-                      helperText=""
-                      value={paymentData.cardName}
-                      onChange={(event) => {
-                        dispatch(
-                          setPaymentData({ cardName: event.target.value })
-                        );
-                      }}
-                    />
-
-                    {/* <RenderField
                       required
-                      error={!!errors.cardName}
-                      helperText={!!errors.cardName && errors.cardName.message}
-                      name="cardName"
                       label="Имя владельца"
                       placeholder="USER NAME"
-                      onChange={cardName}
-                      fullWidth
+                      error={paymentError ? true : false}
+                      helperText={paymentError}
                       inputRef={register}
-                    /> */}
+                      fullWidth
+                      defaultValue={paymentData.cardName}
+                    />
 
                     <TextField
                       name="cvc"
                       label="CVC"
-                      error={false}
-                      helperText=""
-                      value={paymentData.cvc}
-                      onChange={(event) => {
-                        dispatch(setPaymentData({ cvc: event.target.value }));
-                      }}
-                    />
-
-                    {/* <RenderField
+                      placeholder="CVC"
                       required
-                      error={!!errors.cvc}
-                      helperText={!!errors.cvc && errors.cvc.message}
-                      name="cvc"
-                      label="CVC"
-                      onChange={cvc}
+                      error={paymentError ? true : false}
+                      helperText={paymentError}
                       inputRef={register}
-                    /> */}
+                      fullWidth
+                      defaultValue={paymentData.cvc}
+                      onChange={cvcOnChangeHandler}
+                    />
                   </Box>
                 </Paper>
               </Grid>
@@ -196,21 +189,6 @@ const PaymentForm: React.FC = () => {
                 elevation={0}
                 type="submit"
                 className={classes.button}
-                onClick={(event) => {
-                  event.preventDefault();
-                  //event.stopPropagation();
-                  //event.nativeEvent.stopImmediatePropagation();
-
-                  let a: ISavePaymentData = {
-                    cardName: paymentData.cardName,
-                    cardNumber: paymentData.cardNumber,
-                    cvc: paymentData.cvc,
-                    expiryDate: paymentData.date,
-                    token: token,
-                  };
-
-                  dispatch(saveCardRequest(a));
-                }}
               >
                 Сохранить
               </Button>

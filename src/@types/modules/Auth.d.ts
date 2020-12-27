@@ -1,20 +1,7 @@
 declare module "@modules-auth" {
-  export type IFetchAuth = (
-    request: IFetchAuthRequestPayload
-  ) => Promise<IfetchAuthSuccessPayload & IfetchAuthFailurePayload>;
-
-  export type IFetchUpdatePayment = (
-    request: ISavePaymentData
-  ) => Promise<IfetchAuthFailurePayload>;
-
-  export type IFetchRegister = (
-    request: IFetchRegisterRequest
-  ) => Promise<IfetchAuthSuccessPayload & IfetchAuthFailurePayload>;
-
-  export type IFetchAddressList = () => Promise<IFetchAddressListResponse>;
-
-  export type IFetchAddressListResponse = {
-    addresses: string[];
+  export type IRegisterStatus = {
+    success: boolean;
+    token: string;
   };
 
   export type IFetchRegisterRequest = {
@@ -22,6 +9,18 @@ declare module "@modules-auth" {
     password: string;
     name: string;
     surname: string;
+  };
+
+  export type IFetchRegisterResponse = IfetchAuthSuccessPayload &
+    IfetchAuthFailurePayload;
+
+  export type IFetchRegister = (
+    request: IFetchRegisterRequest
+  ) => Promise<IFetchRegisterResponse>;
+
+  export type ILoginData = {
+    email?: string;
+    password?: string;
   };
 
   export type IFetchAuthRequestPayload = {
@@ -35,38 +34,13 @@ declare module "@modules-auth" {
   };
 
   export type IfetchAuthFailurePayload = {
-    success: boolean;
     error: string;
   };
 
-  export type ILoginData = {
-    login?: string;
-    password?: string;
-  };
+  export type IfetchAuthResponse = IfetchAuthSuccessPayload &
+    IfetchAuthFailurePayload;
 
-  export type IPaymentData = {
-    cardNumber?: string;
-    date?: Date;
-    cardName?: string;
-    cvc?: string;
-  };
-
-  export type ISavePaymentData = {
-    cardNumber: string;
-    expiryDate: string;
-    cardName: string;
-    cvc: string;
-    token: string;
-  };
-
-  export type IFetchCalculateRouteRequest = {
-    address1: string;
-    address2: string;
-  };
-
-  export type IFetchCalculateRouteResponse = [];
-
-  export type IFetchCalculateRoute = (
-    request: any
-  ) => Promise<Array<Array<number>>>;
+  export type IFetchAuth = (
+    request: IFetchAuthRequestPayload
+  ) => Promise<IfetchAuthResponse>;
 }

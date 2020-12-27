@@ -1,9 +1,7 @@
 import {
   IFetchAddressListResponse,
-  IFetchAuthRequestPayload,
   IFetchCalculateRouteRequest,
-  ISavePaymentData,
-} from "@modules-auth";
+} from "@modules-routes";
 import api from "modules/api";
 import { takeEvery } from "redux-saga/effects";
 import { fork, call, put } from "redux-saga/effects";
@@ -20,7 +18,7 @@ function* fetchAddressListWatcher() {
   yield takeEvery(getAddressListRequest, fetchAddressListFlow);
 }
 
-function* fetchAddressListFlow({ payload }: { payload }) {
+export function* fetchAddressListFlow({ payload }: { payload }) {
   try {
     const response: IFetchAddressListResponse = yield call(
       api.fetchAddressList
@@ -37,7 +35,7 @@ function* fetchCalculateRouteWatcher() {
   yield takeEvery(calculateRouteRequest, fetchCalculateRouteFlow);
 }
 
-function* fetchCalculateRouteFlow({
+export function* fetchCalculateRouteFlow({
   payload,
 }: {
   payload: IFetchCalculateRouteRequest;

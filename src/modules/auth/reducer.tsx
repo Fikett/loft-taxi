@@ -1,23 +1,31 @@
 import { handleActions } from "redux-actions";
 import { combineReducers, Reducer } from "redux";
 import {
+  clearLoginError,
+  clearRegisterError,
   fetchAuthFailure,
+  fetchAuthRequest,
   fetchAuthSuccess,
   fetchRegisterFailure,
   fetchRegisterRequest,
   fetchRegisterSuccess,
+  resetLoginData,
   saveToken,
   setLoginData,
-  setPaymentData,
+  setLoginError,
   setRegisterData,
+  setRegisterError,
 } from "./actions";
-import { IFetchRegisterRequest, ILoginData, IPaymentData } from "@modules-auth";
+import {
+  IFetchRegisterRequest,
+  ILoginData,
+  IRegisterStatus,
+} from "@modules-auth";
 
 const authenticated = handleActions(
   {
     [fetchAuthSuccess]: () => true,
     [fetchAuthFailure]: () => false,
-    // [fetchSeriesSuccess]: (_state, action) => action.payload,
   },
   false
 );
@@ -27,12 +35,15 @@ const token: Reducer<string, any> = handleActions<string, any>(
     [saveToken.toString()]: (state, { payload }) => {
       return payload;
     },
+    [fetchAuthFailure.toString()]: (state, { payload }) => {
+      return "";
+    },
   },
   ""
 );
 
 const loginDataInitialState: ILoginData = {
-  login: "",
+  email: "",
   password: "",
 };
 
@@ -41,8 +52,26 @@ const loginData: Reducer<ILoginData, any> = handleActions<ILoginData, any>(
     [setLoginData.toString()]: (state, { payload }) => {
       return { ...state, ...payload };
     },
+    [resetLoginData.toString()]: (state, { payload }) => {
+      return loginDataInitialState;
+    },
   },
   loginDataInitialState
+);
+
+const loginError: Reducer<string, any> = handleActions<string, any>(
+  {
+    [setLoginError.toString()]: (state, { payload }) => {
+      return payload;
+    },
+    [clearLoginError.toString()]: (state, { payload }) => {
+      return "";
+    },
+    [fetchAuthRequest.toString()]: (state, { payload }) => {
+      return "";
+    },
+  },
+  ""
 );
 
 const registerDataInitialState: IFetchRegisterRequest = {
@@ -74,23 +103,31 @@ const registerData: Reducer<IFetchRegisterRequest, any> = handleActions<
   registerDataInitialState
 );
 
-const paymentDataInitialState: IPaymentData = {};
-const paymentData: Reducer<IPaymentData, any> = handleActions<
-  IPaymentData,
-  any
->(
+const registerError: Reducer<string, any> = handleActions<string, any>(
   {
-    [setPaymentData.toString()]: (state, { payload }) => {
-      return { ...state, ...payload };
+    [setRegisterError.toString()]: (state, { payload }) => {
+      return payload;
+    },
+    [clearRegisterError.toString()]: (state, { payload }) => {
+      return "";
+    },
+    [fetchRegisterRequest.toString()]: (state, { payload }) => {
+      return "";
     },
   },
-  paymentDataInitialState
+  ""
 );
+
+const registrationStatusInitialState: IRegisterStatus = {
+  success: false,
+  token: "string",
+};
 
 export default combineReducers({
   authenticated,
   loginData,
-  paymentData,
   token,
-  registerData
+  registerData,
+  loginError,
+  registerError,
 });

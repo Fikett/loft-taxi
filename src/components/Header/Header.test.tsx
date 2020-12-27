@@ -11,7 +11,7 @@ describe("Header", () => {
 
   // beforeEach(() => { });
 
-  test("Login btn exists", () => {
+  test("Exit btn exists", () => {
     //const wrapper = shallow(<Header setCurentPage={() => { console.log()}}/>);
 
     const mockStore = configureStore();
@@ -26,8 +26,8 @@ describe("Header", () => {
       { wrapper: MemoryRouter }
     );
 
-    fireEvent.click(getByTestId("headerLoginBtn"));
+    fireEvent.click(getByTestId("headerExitBtn"));
 
-    expect(getByTestId("headerLoginBtn")).toBeTruthy();
+    expect(getByTestId("headerExitBtn")).toBeTruthy();
   });
 });

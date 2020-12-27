@@ -1,10 +1,16 @@
 import { Grid, makeStyles, Paper, Typography } from "@material-ui/core";
 import PaymentForm from "components/Profile/PaymentForm";
+import PaymentSaveWindow from "components/Profile/PaymentSaveWindow";
+import { setPaymentSavedWindowShow } from "modules/payment/actions";
+import { selectPaymentSavedWindowShow } from "modules/payment/selectors";
 import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import img from "../assets/img/login-background.jpg";
 
 const styles = (theme) => ({
   background: {
-    backgroundImage: `url(${"assets/login-background.jpg"})`,
+    backgroundImage: `url(${img})`,
     backgroundSize: "cover",
   },
   paper: {
@@ -26,13 +32,18 @@ const styles = (theme) => ({
 const useStyles = makeStyles(styles);
 
 const Profile = () => {
-  useEffect(() => {}, []);
+  const dispatch = useDispatch();
 
   const classes = useStyles();
 
+  useEffect(() => {
+    dispatch(setPaymentSavedWindowShow(false));
+  }, []);
+
+  const paymentSavedWindowShow = useSelector(selectPaymentSavedWindowShow);
+
   return (
     <>
-      Profile
       <Paper className={classes.background}>
         <Grid
           container
@@ -53,7 +64,8 @@ const Profile = () => {
               >
                 Способ оплаты
               </Typography>
-              <PaymentForm />
+
+              {paymentSavedWindowShow ? <PaymentSaveWindow /> : <PaymentForm />}
             </Paper>
           </Grid>
         </Grid>

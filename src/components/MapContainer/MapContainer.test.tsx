@@ -1,22 +1,28 @@
-
 import React from "react";
 import { fireEvent, render } from "@testing-library/react";
 import MapContainer from "./MapContainer";
+import { Provider } from "react-redux";
 
-describe("MapContainer", () =>
-{
-    // beforeEach(() => { });
+describe("MapContainer", () => {
+  // beforeEach(() => { });
 
-    // beforeEach(() => { });
+  // beforeEach(() => { });
 
-    test("MapContainer renders", () =>
-    {
-        // jest.mock('mapbox-gl/dist/mapbox-gl', () => ({
-        //     Map: () => ({})
-        //  }));
+  test("MapContainer renders", () => {
+    const mockStore = {
+      getState: () => ({
+        auth: { authenticated: true, loginData: { login: "", password: "" } },
+        routes: { currentRoute: [] },
+        payment: { paymentData: { cardName: "", cardNumber: "", cvc: "" } },
+      }),
+      subscribe: () => {},
+      dispatch: () => {},
+    };
 
-        render(
-            <MapContainer />
-        );
-    });
+    render(
+      <Provider store={mockStore}>
+        <MapContainer />
+      </Provider>
+    );
+  });
 });

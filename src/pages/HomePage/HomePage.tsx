@@ -7,21 +7,26 @@ import Profile from "../Profile";
 import Registration from "../Registration";
 
 import { Switch, Route, Redirect, useHistory } from "react-router-dom";
-import { selectAuthenticated } from "modules/auth/selectors";
+import { selectAuthenticated, selecttoken } from "modules/auth/selectors";
 import { useDispatch, useSelector } from "react-redux";
+import { getPaymentRequest } from "modules/payment/actions";
+import { IFetchGetPaymentRequest } from "@modules-payment";
 
-export const LoginContext = React.createContext<LoginContext>({
-  status: false,
-});
+// export const LoginContext = React.createContext<LoginContext>({
+//   status: false,
+// });
 
-export type LoginContext = {
-  status: boolean;
-};
+// export type LoginContext = {
+//   status: boolean;
+// };
 
 const HomePage = () => {
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const isLoggedIn = useSelector(selectAuthenticated);
+
+  const token = useSelector(selecttoken);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -31,17 +36,39 @@ const HomePage = () => {
     }
   }, [isLoggedIn]);
 
+  useEffect(() => {
+    if (isLoggedIn && token) {
+      let req: IFetchGetPaymentRequest = {
+        token: token,
+      };
+
+      dispatch(getPaymentRequest(req));
+    }
+  }, [isLoggedIn, token]);
+
   return (
     <>
-      <LoginContext.Provider value={{ status: isLoggedIn }}>
-        <Header />
-
+      {/* <LoginContext.Provider value={{ status: isLoggedIn }}> */}
         <Switch>
           <Route exact path="/map">
-            {isLoggedIn ? <Map /> : <Redirect to={"/login"} />}
+            {isLoggedIn ? (
+              <>
+                <Header />
+                <Map />
+              </>
+            ) : (
+              <Redirect to={"/login"} />
+            )}
           </Route>
           <Route exact path="/profile">
-            {isLoggedIn ? <Profile /> : <Redirect to={"/login"} />}
+            {isLoggedIn ? (
+              <>
+                <Header />
+                <Profile />
+              </>
+            ) : (
+              <Redirect to={"/login"} />
+            )}
           </Route>
           <Route exact path="/login">
             <Login />
@@ -50,7 +77,7 @@ const HomePage = () => {
             <Registration />
           </Route>
         </Switch>
-      </LoginContext.Provider>
+      {/* </LoginContext.Provider> */}
     </>
   );
 };
